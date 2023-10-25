@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background-color: beige;
+     overflow: hidden; /* Hide the scrollbars */
+  }
+  .container {
+    position: relative;
+  }
+  canvas {
+    border: 3px solid black;
+    margin-top: 25px;
+  }
+  .customAlert {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+  }
+  .closeAlert {
+    position: absolute;
+    left: 45%;
+  }
+  .newCanvasContainer {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .newCanvas {
+    border:none;
+    width: 1080px; /* Set the width of the new canvas */
+    height: 500px; /* Set the height of the new canvas */
+    background-color: none;
+  }
+  #animatedGif {
+    border: 3px solid black;
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+     max-width: 100%; /* Add this to make the GIF fit the container */
+    max-height: 100%; /* Add this to make the GIF fit the container */
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+      <center>
+    <canvas></canvas>
+    </center>
+  </div>
+ <div id="alert1" class="customAlert">
+    <p>do you think true love is real?</p>
+    <button class="closeAlert">maybe</button>
+  </div>
+  <div id="alert2" class="customAlert">
+    <p>do you think gauguin was a fool for putting his love into the vision of the sermon?</p>
+    <button class="closeAlert">picasso did this too, most arists did</button>
+  </div>
+ <div id="alert3" class="customAlert">
+    <p>am i doomed to be picasso</p>
+    <button class="closeAlert">i hope not</button>
+  </div>
+    <div id="alert4" class="customAlert">
+    <p>i hope not too, i wonder which artist im most like</p>
+    <button class="closeAlert">you're you, i think</button>
+  </div>
+  <div id="alert5" class="customAlert">
+    <p>maybe i wish i could be reborn, and become new, new artist, new me</p>
+    <button class="closeAlert">ok</button>
+  </div>
+ <div id="alert6" class="customAlert">
+    <p>do you ever feel like that?</p>
+    <button class="closeAlert">not really</button>
+  </div>
+ <div id="alert7" class="customAlert">
+    <p>okay</p>
+    <button class="closeAlert">are you done yet?</button>
+  </div>
+<div id="alert8" class="customAlert">
+    <p>maybe</p>
+    <button class="closeAlert">okay</button>
+  </div>
+    <div id="alert9" class="customAlert">
+    <p>do you think i should wrestle that angel</p>
+    <button class="closeAlert">sure</button>
+  </div>
+  <div class="newCanvasContainer">
+    <canvas id="newCanvas" class="newCanvas"></canvas>
+    <img id="animatedGif" src="wrestle.GIF">
+  </div>
+<div class="tesysys">
+    <center>
+<newCanvas></newCanvas>
+    </center>
+    </div>
+  <script>
+    let animationPaused = false; // Pause animation initially
+    let currentAlertIndex = -1; // Index of the current alert
+
+    const canvas = document.querySelector('canvas');
+    const c = canvas.getContext('2d');
+    canvas.width = 1080;
+    canvas.height = 500;
+    c.fillStyle = 'white';
+    c.fillRect(0, 0, canvas.width, canvas.height);
+
+     const img = new Image();
+    img.src = 'bg.PNG';
+
+    img.onload = function () {
+      // Once the image is loaded, you can use it in your code.
+      // This ensures that the image is fully loaded before drawing it.
+      // For example, you can draw it in the canvas here.
+    };
+
+    const playerimg = new Image();
+    playerimg.src = 'rightsprite.PNG';
+
+    playerimg.onload = function () {
+      // Once the player image is loaded, you can use it in your code.
+      // This ensures that the image is fully loaded before using it.
+      // For example, you can create your Sprite object here.
+    };
+
+    const newCanvas = document.getElementById('newCanvas'); // Get the new canvas element
+    newCanvas.width = 1080; // Set the width of the new canvas
+    newCanvas.height = 500; // Set the height of the new canvas
+    newCanvas.style.display = 'none'; // Hide the new canvas initially
+
+    const animatedGif = document.getElementById('animatedGif'); // Get the GIF element
+    animatedGif.style.display = 'none'; // Hide the GIF initially
+
+    class Sprite {
+      constructor({ position, playerimg, frames = { max: 3 } }) {
+        this.frames = { ...frames, val: 0, elapsed: 0 };
+        this.position = position;
+        this.playerimg = playerimg;
+
+        this.playerimg.onload = () => {
+          this.wid = this.playerimg.width / this.frames.max;
+          this.heig = this.playerimg.height;
+        };
+      }
+
+      draw() {
+        if (!animationPaused) {
+          if (this.frames.max > 1) {
+            this.frames.elapsed++;
+            if (keys.d.pressed) {
+              if (this.frames.elapsed % 10 == 0) {
+                if (this.frames.val == 2)
+                  this.frames.val = 2
+                else
+                  this.frames.val++
+              }
+            }
+          }
+        }
+
+        c.clearRect(0, 0, canvas.width, canvas.height);
+        c.drawImage(
+          img,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        c.drawImage(
+          this.playerimg,
+          this.frames.val * this.wid,
+          0,
+          this.wid,
+          this.heig,
+          this.position.x,
+          0,
+          this.wid,
+          this.heig
+        );
+      }
+    }
+
+    const player = new Sprite({
+      position: {
+        x: 0,
+        y: 0,
+      },
+      playerimg: playerimg,
+    });
+
+    const keys = {
+      a: {
+        pressed: false,
+      },
+      d: {
+        pressed: false,
+      },
+    };
+
+    function animate() {
+      if (!animationPaused) {
+        window.requestAnimationFrame(animate);
+      }
+
+      player.draw();
+
+      if (keys.d.pressed) {
+        player.position.x = player.position.x + 3;
+      }
+    }
+
+    // Show custom alert dialogs
+    const alerts = document.querySelectorAll('.customAlert');
+    const closeAlertButtons = document.querySelectorAll('.closeAlert');
+
+    function showAlert(alertElement) {
+      alertElement.style.display = 'block';
+      animationPaused = true; // Pause animation
+    }
+
+    function hideAlert(alertElement) {
+      alertElement.style.display = 'none';
+      animationPaused = false; // Resume animation
+      requestAnimationFrame(animate); // Start the animation again
+    }
+
+    closeAlertButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        hideAlert(this.parentNode);
+        currentAlertIndex++;
+
+        if (currentAlertIndex < alerts.length) {
+          showAlert(alerts[currentAlertIndex]);
+        } else {
+          // Hide the original canvas and show the new canvas and animated GIF
+          const container = document.querySelector('.container');
+          if (container) {
+            container.style.display = 'none';
+          }
+          newCanvas.style.display = 'block';
+          animatedGif.style.display = 'block';
+        }
+      });
+    });
+
+    // Check the conditions and display the custom alerts outside the loop
+    function checkConditions() {
+      if (player.position.x > 100 && currentAlertIndex === -1) {
+        player.frames.val = 1; // Change sprite frame to 1
+        animationPaused = true; // Pause animation
+        currentAlertIndex = 0;
+        showAlert(alerts[currentAlertIndex]);
+
+        // Add this line to stop the sprite from moving
+        keys.d.pressed = false;
+      }
+
+      // Schedule the next checkConditions call
+      requestAnimationFrame(checkConditions);
+    }
+
+    // Start checking the conditions
+    checkConditions();
+
+    window.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'a':
+          keys.a.pressed = true;
+          break;
+        case 'd':
+          keys.d.pressed = true;
+          break;
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      switch (e.key) {
+        case 'a':
+          keys.a.pressed = false;
+          break;
+        case 'd':
+          keys.d.pressed = false;
+          break;
+      }
+    });
+
+    // Start the animation loop after setting the initial animationPaused state
+    animate();
+  </script>
+</body>
+</html>
